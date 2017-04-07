@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.List;
 import java.io.ByteArrayOutputStream;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 //This is the main Ativity
 
@@ -28,6 +29,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String password = getIntent().getExtras().getString("password");
+
+        int toast_dur = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(getApplicationContext(),password,toast_dur);
+
+        toast.show();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
