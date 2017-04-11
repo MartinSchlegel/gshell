@@ -44,8 +44,5 @@ public class HostFormActivity extends AppCompatActivity{
 
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
-
-
-
     }
 }
