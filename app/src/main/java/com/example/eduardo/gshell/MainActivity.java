@@ -30,12 +30,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String password = getIntent().getExtras().getString("password");
+        if (getIntent().hasExtra("password")){
+            String password = getIntent().getExtras().getString("password");
 
-        int toast_dur = Toast.LENGTH_LONG;
-        Toast toast = Toast.makeText(getApplicationContext(),password,toast_dur);
+            int toast_dur = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(getApplicationContext(),password,toast_dur);
 
-        toast.show();
+            toast.show();}
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
