@@ -3,6 +3,7 @@ package com.example.eduardo.gshell;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +31,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,29 +79,96 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         //mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
        // populateAutoComplete();
+        final File contextDir = getApplicationContext().getFilesDir();
+        File dataFilesDir = new File(contextDir.getAbsolutePath() + "/PasswordFile");
+        //create dir to store dataFiles, in case it does not exist
+        try {
+            //make the new dir: dataFiles
+            dataFilesDir.mkdir();
+            //create a list of files in the dataFiles dir:
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
+        }
+        catch(Exception e){}
+
+        File[] lsDataFilesDir = dataFilesDir.listFiles();
+        int nr_files = lsDataFilesDir.length;
+        if (nr_files==0) {
+            final Boolean is_new = Boolean.TRUE;
+            mPasswordView = (EditText) findViewById(R.id.password);
+            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                        attemptLogin(is_new);
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+            Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+            mEmailSignInButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    attemptLogin(is_new);
+                }
+            });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+            mLoginFormView = findViewById(R.id.login_form);
+            mProgressView = findViewById(R.id.login_progress);
+            //TO DO: WARNING IF MORE THAN ONE FILE
+        } else {
+            final Boolean is_new = Boolean.FALSE;
+            mPasswordView = (EditText) findViewById(R.id.password);
+            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                        attemptLogin(is_new);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            String dummy = "There exists an account";
+            int toast_dur = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(getApplicationContext(),dummy,toast_dur);
+
+            toast.show();
+            Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+            mEmailSignInButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    attemptLogin(is_new);
+                }
+            });
+
+            Button deleteAccountButton = (Button) findViewById(R.id.delte_all_sign_in_button);
+            deleteAccountButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String dummy = "Deleting all accounts";
+                    int toast_dur = Toast.LENGTH_LONG;
+                    Toast toast = Toast.makeText(getApplicationContext(),dummy,toast_dur);
+
+                    toast.show();
+
+                    File dataFilesDir = new File(contextDir.getAbsolutePath() + "/PasswordFile");
+
+                    File[] lsDataFilesDir = dataFilesDir.listFiles();
+                    for (int i = 0; i < lsDataFilesDir.length; ++i){
+                        new File(contextDir.getAbsolutePath() + "/PasswordFile"+"/"+lsDataFilesDir[i].getName()).delete();
+
+                    }
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            mLoginFormView = findViewById(R.id.login_form);
+            mProgressView = findViewById(R.id.login_progress);
+        }
+
     }
 
 
@@ -147,12 +223,72 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptLogin(Boolean is_new) {
 
+        String filepath = getApplicationContext().getFilesDir().getAbsolutePath() + "/PasswordFile";
         String password = mPasswordView.getText().toString();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra("password",password);
-        startActivity(intent);
+
+        if (is_new) {
+            //password = password + "_saved";
+            Server password_server = new Server("password_file.txt","dummy",password, "dummy");
+            password_server.save(getApplicationContext().getFilesDir().getAbsolutePath() + "/PasswordFile");
+            intent.putExtra("password", password);
+            startActivity(intent);
+        } else {
+            Server password_server = Server.load(getApplicationContext().getFilesDir().getAbsolutePath() + "/PasswordFile/password_file.txt");
+            String password_orig = password_server.passwd;
+            int toast_dur = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(getApplicationContext(),"Original password is: " + password_orig + " and trial password is " + password,toast_dur);
+
+            toast.show();
+            if (password.equals(password_orig)) {
+
+                toast = Toast.makeText(getApplicationContext(),"Password is correct!",toast_dur);
+
+                toast.show();
+                intent.putExtra("password", password);
+                startActivity(intent);
+            } else {
+                //TODO find a more elegant way to exit this function
+                Intent intent_back = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent_back);
+            }
+        }
+
+        //intent.putExtra("password", password);
+        //startActivity(intent);
+
+// open file to overwrite
+/*            FileWriter writer = null;
+
+            try{
+                writer = new FileWriter(filepath,false);
+            }
+            catch(IOException error)
+            {
+                error.printStackTrace();
+            }
+
+
+            // write lines
+            try{
+                writer.write(password);
+            }
+            catch(IOException error){
+                error.printStackTrace();
+            }
+
+
+            // close file
+            try{
+                writer.close();
+            }
+            catch(IOException error){
+                error.printStackTrace();
+            }
+        }*/
+
 
 
         if (mAuthTask != null) {
@@ -199,6 +335,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(password);
             mAuthTask.execute((Void) null);
         }
+
+
     }
 
     private boolean isEmailValid(String email) {

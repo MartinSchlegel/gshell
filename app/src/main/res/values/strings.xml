@@ -12,6 +12,7 @@
     <string name="password">Password</string>
     <string name="save">Save</string>
 
+    <string name="action_delte_sign_in">Delte all accounts</string>
     <string name="host_delete">Delete hosts</string>
     <string name="host_edit">Edit hosts</string>
     <string name="title">Title</string>
