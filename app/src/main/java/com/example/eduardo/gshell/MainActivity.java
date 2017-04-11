@@ -107,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putSerializable("SERVER", s);
                 intent.putExtras(bundle);
                 startActivity(intent);
-
-
             }
         });
 
