@@ -4,10 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -75,7 +77,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
         // Set up the login form.
         //mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
        // populateAutoComplete();
@@ -93,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         File[] lsDataFilesDir = dataFilesDir.listFiles();
         int nr_files = lsDataFilesDir.length;
         if (nr_files==0) {
+            setContentView(R.layout.first_activity_login);
             final Boolean is_new = Boolean.TRUE;
             mPasswordView = (EditText) findViewById(R.id.password);
             mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -118,6 +120,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mProgressView = findViewById(R.id.login_progress);
             //TO DO: WARNING IF MORE THAN ONE FILE
         } else {
+            setContentView(R.layout.activity_login);
             final Boolean is_new = Boolean.FALSE;
             mPasswordView = (EditText) findViewById(R.id.password);
             mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -157,19 +160,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     File[] lsDataFilesDir = dataFilesDir.listFiles();
                     for (int i = 0; i < lsDataFilesDir.length; ++i){
+                        // deleting any old app passwords
                         new File(contextDir.getAbsolutePath() + "/PasswordFile"+"/"+lsDataFilesDir[i].getName()).delete();
+                    }
 
+                    dataFilesDir = new File(contextDir.getAbsolutePath() + "/dataFiles");
+
+                    lsDataFilesDir = dataFilesDir.listFiles();
+                    for (int i = 0; i < lsDataFilesDir.length; ++i){
+                        new File(contextDir.getAbsolutePath() + "/dataFiles"+"/"+lsDataFilesDir[i].getName()).delete();
                     }
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                 }
             });
 
+
+
             mLoginFormView = findViewById(R.id.login_form);
             mProgressView = findViewById(R.id.login_progress);
         }
 
     }
+
+
 
 
     private void populateAutoComplete() {

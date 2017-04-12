@@ -1,10 +1,12 @@
 package com.example.eduardo.gshell;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -45,4 +47,11 @@ public class HostFormActivity extends AppCompatActivity{
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
     }
+
+    public void cancel_save(View view) {
+
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+    }
+
 }

@@ -126,6 +126,20 @@
                     android:layout_weight="1" />
             </TableRow>
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/RowMargin">
+
+                <Button
+                    android:onClick="cancel_save"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    android:id="@+id/cancel_saveButton"
+                    android:layout_weight="1" />
+            </TableRow>
+
         </TableLayout>
     </ScrollView>
 

@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -102,4 +103,6 @@ public class HostEditActivity extends AppCompatActivity {
                 .setDuration(2000).show();
         //new File(contextDir.getAbsolutePath() + "/dataFiles"+"/"+fileArray[position]).delete();
     }
+
+
 }

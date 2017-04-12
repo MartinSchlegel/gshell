@@ -77,4 +77,9 @@ public class HostFormEditActivity extends AppCompatActivity {
 
     }
 
+    public void cancel_save(View view) {
+
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+    }
 }
