@@ -23,7 +23,7 @@ import android.widget.Toast;
 //This is the main Ativity
 
 public class MainActivity extends AppCompatActivity {
-
+    public static String global_password="null";
     public String output;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (getIntent().hasExtra("password")){
-            String password = getIntent().getExtras().getString("password");
+            global_password = getIntent().getExtras().getString("password");
 
             int toast_dur = Toast.LENGTH_LONG;
-            Toast toast = Toast.makeText(getApplicationContext(),password,toast_dur);
+            Toast toast = Toast.makeText(getApplicationContext(),global_password,toast_dur);
 
             toast.show();}
 
@@ -101,7 +101,8 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Server s = Server.load(contextDir.getAbsolutePath() + "/dataFiles" + "/"+ adapter.labelId[position]);
+
+                Server s = Server.load(contextDir.getAbsolutePath() + "/dataFiles" + "/"+ adapter.labelId[position],global_password);
                 Intent intent = new Intent(getApplicationContext(), ServerTabActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("SERVER", s);

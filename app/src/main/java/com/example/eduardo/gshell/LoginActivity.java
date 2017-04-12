@@ -232,11 +232,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (is_new) {
             //password = password + "_saved";
             Server password_server = new Server("password_file.txt","dummy",password, "dummy");
-            password_server.save(getApplicationContext().getFilesDir().getAbsolutePath() + "/PasswordFile");
+            password_server.save(getApplicationContext().getFilesDir().getAbsolutePath() + "/PasswordFile","password");
             intent.putExtra("password", password);
             startActivity(intent);
         } else {
-            Server password_server = Server.load(getApplicationContext().getFilesDir().getAbsolutePath() + "/PasswordFile/password_file.txt");
+            Server password_server = Server.load(getApplicationContext().getFilesDir().getAbsolutePath() + "/PasswordFile/password_file.txt","password");
             String password_orig = password_server.passwd;
             int toast_dur = Toast.LENGTH_LONG;
             Toast toast = Toast.makeText(getApplicationContext(),"Original password is: " + password_orig + " and trial password is " + password,toast_dur);

@@ -25,7 +25,7 @@ public class HostFormEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.host_form_activity);
         String filePath = getIntent().getExtras().getString("filepath");
-        Server server = Server.load(filePath);
+        Server server = Server.load(filePath,MainActivity.global_password);
 
         String server_name = server.name;
         String server_user_name = server.user_name;
@@ -66,7 +66,7 @@ public class HostFormEditActivity extends AppCompatActivity {
         String filePath_new = getApplicationContext().getFilesDir().getAbsolutePath() + "/dataFiles";
 
         new File(filePath_old).delete();
-        server.save(filePath_new);
+        server.save(filePath_new,MainActivity.global_password);
 
         //Server s2 = Server.load(filePath+"/cx1");
         //Log.d("Passed:", s2.toString());

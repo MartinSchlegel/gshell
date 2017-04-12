@@ -31,7 +31,7 @@ public class Server implements Serializable{
         this.hostname = hostname;
     }
 
-    public void save(String filePath) {
+    public void save(String filePath, String password) {
         FileOutputStream fos = null;
         ObjectOutputStream os = null;
         try {
@@ -41,7 +41,7 @@ public class Server implements Serializable{
             os = new ObjectOutputStream(fos);
             try
             {
-                AESEncrypter_v2 encrypter = new AESEncrypter_v2("password");
+                AESEncrypter_v2 encrypter = new AESEncrypter_v2(password);
 
                 this.name = encrypter.encrypt(this.name);
                 this.user_name = encrypter.encrypt(this.user_name);
@@ -62,13 +62,13 @@ public class Server implements Serializable{
 
     }
 
-    public static Server load(String filePathPlusName) {
+    public static Server load(String filePathPlusName, String password) {
         Server server = null;
         try {
             FileInputStream fis = new FileInputStream(new File(filePathPlusName));
             ObjectInputStream is = new ObjectInputStream(fis);
             server = (Server) is.readObject();
-            AESEncrypter_v2 encrypter = new AESEncrypter_v2("password");
+            AESEncrypter_v2 encrypter = new AESEncrypter_v2(password);
 
             server.name = encrypter.decrypt(server.name);
             server.user_name = encrypter.decrypt(server.user_name);
