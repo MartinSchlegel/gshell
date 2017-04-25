@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Good website for Material Design colour palette:https://www.materialpalette.com -->
+<!-- when changing the text colours remember to stick to Material Design opacity rules based on light or dark theme -->
+<!-- currently using a LIGHT theme so the primary and secondary text opacities are 87 and 54% (First two digits in the ARGB hex code set the opacity) -->
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#FFCCDB3A</color>
+    <color name="colorPrimaryDark">#FFAFB42C</color>
+    <color name="colorAccent">#FF029688</color>
+    <color name="colorPrimaryLight">#FFEFF3C2</color>
+    <color name="colorPrimaryText">#DE212121</color>
+    <color name="colorSecondaryText">#8A757575</color>
+    <color name="colorDivider">#FFBDBDBD</color>
 </resources>
